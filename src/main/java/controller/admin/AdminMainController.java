@@ -1,11 +1,12 @@
 
 package controller.admin;
 
+import DTO.*;
 import business.AlbumBO;
 import business.ArtistBO;
 import business.UserBO;
-import domain.Role;
-import domain.User;
+import dao.impl.DaoBase;
+import domain.*;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +44,13 @@ private final static Logger logger = Logger.getLogger(AdminMainController.class)
    
     
     @RequestMapping(value = "user/{id}")
-    public User getUser(@PathVariable Integer id){
+    public UserDTO getUser(@PathVariable Integer id){
         try{
+            javax.swing.JOptionPane.showMessageDialog(null, "sfasfsd");
             User user = userBO.findUserById(id);
-            javax.swing.JOptionPane.showMessageDialog(null, user);
-            return user;
+            DaoBase toDto = new DaoBase();
+            javax.swing.JOptionPane.showMessageDialog(null, toDto.getDTO(user));                        
+            return toDto.getDTO(user);
         }catch(Exception e){
             logger.error(e.getStackTrace());
         }

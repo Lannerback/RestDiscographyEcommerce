@@ -5,10 +5,8 @@
  */
 package DTO;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -30,8 +28,8 @@ public class AlbumDTO implements java.io.Serializable {
                 
     private ArtistDTO artist;     
         
-    private List<UserDTO> users = new ArrayList<UserDTO>();
-
+    public AlbumDTO(){}
+    
     public AlbumDTO(String imagepath, String imagebase64, byte[] imagefile, String title, String length, String label, String producer, Date year, String genre, ArtistDTO artist) {
         this.imagepath = imagepath;
         this.imagebase64 = imagebase64;
@@ -125,17 +123,9 @@ public class AlbumDTO implements java.io.Serializable {
         this.artist = artist;
     }
 
-    public List<UserDTO> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserDTO> users) {
-        this.users = users;
-    }
-
     @Override
     public int hashCode() {
-        int hash = 3;
+        int hash = 5;
         hash = 97 * hash + Objects.hashCode(this.imagepath);
         hash = 97 * hash + Objects.hashCode(this.imagebase64);
         hash = 97 * hash + Arrays.hashCode(this.imagefile);
@@ -146,9 +136,12 @@ public class AlbumDTO implements java.io.Serializable {
         hash = 97 * hash + Objects.hashCode(this.year);
         hash = 97 * hash + Objects.hashCode(this.genre);
         hash = 97 * hash + Objects.hashCode(this.artist);
-        hash = 97 * hash + Objects.hashCode(this.users);
         return hash;
     }
+
+  
+
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -162,6 +155,7 @@ public class AlbumDTO implements java.io.Serializable {
             return false;
         }
         final AlbumDTO other = (AlbumDTO) obj;
+        
         if (!Objects.equals(this.imagepath, other.imagepath)) {
             return false;
         }
@@ -191,16 +185,16 @@ public class AlbumDTO implements java.io.Serializable {
         }
         if (!Objects.equals(this.artist, other.artist)) {
             return false;
-        }
-        if (!Objects.equals(this.users, other.users)) {
-            return false;
-        }
+        }     
         return true;
     }
 
     @Override
     public String toString() {
-        return "AlbumDTO{" + "imagepath=" + imagepath + ", imagebase64=" + imagebase64 + ", imagefile=" + imagefile + ", title=" + title + ", length=" + length + ", label=" + label + ", producer=" + producer + ", year=" + year + ", genre=" + genre + ", artist=" + artist + ", users=" + users + '}';
+        return "AlbumDTO{" + "imagepath=" + imagepath + ", imagebase64=" + imagebase64 +
+                ", imagefile=" + imagefile + ", title=" + title + ", length=" + length +
+                ", label=" + label + ", producer=" + producer + ", year=" + year +
+                ", genre=" + genre + ", artist=" + artist + '}';
     }
 
     

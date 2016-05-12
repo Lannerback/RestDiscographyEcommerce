@@ -5,23 +5,8 @@
  */
 package DTO;
 
-import domain.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.annotations.CascadeType;
 
 
 public class ArtistDTO implements Serializable{        
@@ -29,8 +14,64 @@ public class ArtistDTO implements Serializable{
     private String name;
        
     private String surname;
-       
-    private List<AlbumDTO> albums = new ArrayList<AlbumDTO>();
+
+    public ArtistDTO(){}
+    
+    public ArtistDTO(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.name);
+        hash = 59 * hash + Objects.hashCode(this.surname);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ArtistDTO other = (ArtistDTO) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.surname, other.surname)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ArtistDTO{" + "name=" + name + ", surname=" + surname + '}';
+    }
+               
     
     
 }
