@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/tx 
+       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"
+>
+          
+     
+        
+   <tx:annotation-driven/>
+   
+   <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="domain"/>
+
+        <!--property name="annotatedClasses">
+            <list>
+                <value>domain.Artist</value>
+                <value>domain.Album</value>
+                <value>domain.User</value>
+                <value>domain.UserRoles</value>
+            </list>
+        </property-->
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.enable_lazy_load_no_trans">true</prop>                
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="dataSource"
+              class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+              p:driverClassName="${jdbc.driverClassName}"
+              p:url="${jdbc.url}"
+              p:username="${jdbc.username}"
+              p:password="${jdbc.password}"/>
+    
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+          p:location="/WEB-INF/jdbc.properties" />
+    
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+      <property name="sessionFactory" ref="sessionFactory" />
+    </bean>       
+    
+    <!-- CUSTOM BEANS -->
+    <bean id="albumDao"  class="dao.impl.AlbumDAOImpl"/>        
+    
+    <bean id="artistDao"  class="dao.impl.ArtistDAOImpl"/>
+
+    <bean id="userDao" class="dao.impl.UserDAOImpl"/>
+    
+    <bean id="roleDao" class="dao.impl.RoleDAOImpl" />
+    
+    <bean id="albumBO" class="business.impl.AlbumBOImpl"/>  
+
+    <bean id="artistBO" class="business.impl.ArtistBOImpl"/>
+    
+    <bean id="userBO" class="business.impl.UserBOImpl"/>
+    
+    <bean id="roleBO" class="business.impl.RoleBOImpl" />
+        
+</beans>
