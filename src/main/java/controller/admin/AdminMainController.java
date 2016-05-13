@@ -40,27 +40,7 @@ private final static Logger logger = Logger.getLogger(AdminMainController.class)
     @Autowired
     @Qualifier("daoBase")
     private DaoBase toDto;
-    
-    
-    @RequestMapping(value = "user/{id}")
-    public UserDTO getUser(@PathVariable Integer id){
-        try{
-            User user = userBO.findUserById(id);
-            return toDto.getDTO(user);
-        }catch(Exception e){
-            logger.error(e.getStackTrace());
-            return null; 
-        }
-        
-                              
-    }
-        
-    
-    
-    
-    
-   
-    
+                                         
 }
 
 

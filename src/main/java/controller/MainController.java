@@ -214,36 +214,6 @@ public class MainController {
             javax.swing.JOptionPane.showMessageDialog(null, "errore save order: " + e.getMessage());
         }
         return "index";
-    }
-    
-/*________________________________________________________________________________________________________________*/
-    @RequestMapping(value = "/login")
-    public String login() {
-        return "login";
-    }
-
-    @RequestMapping(value = "showalbum/{id}")
-    public ResponseEntity<AlbumDTO> show_album_detail(@PathVariable Integer id) {        
-        try{
-            Album album = albumBO.findByUid(id);                       
-            return ResponseEntity.ok(toDto.getDTO(album));
-        }catch(Exception e){            
-            logger.error(e.getStackTrace());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
-
-    @RequestMapping(value = "showartist/{id}")
-    public ResponseEntity<ArtistDTO> show_artist_detail(@PathVariable Long id) {
-        try{
-            Artist artist;
-            artist = artistBO.findByUid(id);
-            return ResponseEntity.ok(toDto.getDTO(artist));
-        }catch(Exception e){
-            logger.error(e.getStackTrace());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-        
-    }
+    }         
 
 }

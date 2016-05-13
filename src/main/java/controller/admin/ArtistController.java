@@ -16,6 +16,7 @@ import domain.Artist;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,10 @@ public class ArtistController {
     @Autowired
     @Qualifier("daoBase")
     private DaoBase toDto;
+    
+    /* PRENDE LA REQUEST
+    @Autowired
+    private HttpServletRequest context;*/
 
     static final Logger logger = Logger.getLogger(ArtistController.class);
 
@@ -73,10 +78,25 @@ public class ArtistController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);            
         }        
     }
+    
+    @RequestMapping(value = "getArtist/{id}")
+    public ResponseEntity<ArtistDTO> getArtist(@PathVariable Long id) {
+        try{
+            Artist artist;
+            artist = artistBO.findByUid(id);
+            if(artist == null)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.ok(toDto.getDTO(artist));
+        }catch(Exception e){
+            logger.error(e.getStackTrace());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        
+    }
 
-    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @RequestMapping(value = "save", method = RequestMethod.POST)
     public HttpStatus save(@Valid Artist artist) {
-
+        
         try {
             if (artistBO.existArtist(artist)) {
                 return HttpStatus.CONFLICT;
@@ -89,6 +109,7 @@ public class ArtistController {
         return HttpStatus.OK;
 
     }
+ 
 
     @RequestMapping(value = "remove/{id}", method = RequestMethod.DELETE)
     public HttpStatus remove(

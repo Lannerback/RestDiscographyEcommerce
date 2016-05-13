@@ -72,7 +72,7 @@ public class AlbumController {
             
             for(Album album : albumBO.findAllAlbums()){
                 albums.add(toDto.getDTO(album));
-            }            
+            }                     
             return ResponseEntity.ok(albums);
         } catch (Exception e) {            
             logger.error(e);
@@ -80,6 +80,21 @@ public class AlbumController {
         }        
     }    
 
+    @RequestMapping(value = "getAlbum/{id}")
+    public ResponseEntity<AlbumDTO> getAlbum(@PathVariable Integer id) {        
+        try{
+            Album album = albumBO.findByUid(id);          
+            
+            if(album == null)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+             
+            return ResponseEntity.ok(toDto.getDTO(album));
+        }catch(Exception e){            
+            logger.error(e.getStackTrace());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+    
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public HttpStatus save(@Valid @RequestBody Album album, @RequestParam(value = "file") MultipartFile imagefile) {
         
@@ -155,5 +170,5 @@ public class AlbumController {
         }
         return HttpStatus.OK;
     }
-
+    
 }

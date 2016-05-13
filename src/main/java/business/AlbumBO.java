@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface AlbumBO {
  
-  @PreAuthorize ("hasRole('ROLE_ADMIN')") //se attivato solo chi è admin lo vedra e funge davvero
   public void delete(Integer uid);
    
   public List<Album> findAllAlbums();
