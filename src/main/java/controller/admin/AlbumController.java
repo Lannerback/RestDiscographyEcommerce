@@ -5,13 +5,16 @@
  */
 package controller.admin;
 
+import DTO.AlbumDTO;
 import business.AlbumBO;
 import business.ArtistBO;
+import dao.impl.DaoBase;
 import domain.Album;
 import domain.Artist;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -22,13 +25,17 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -50,28 +57,32 @@ public class AlbumController {
     @Autowired
     @Qualifier("fileManager")
     private FileManager fileManager;
+    
+    @Autowired
+    @Qualifier("daoBase")
+    private DaoBase toDto;
 
     static final Logger logger = Logger.getLogger(AlbumController.class);
 
 
-    @RequestMapping(value = {"", "list"})
-    public List<Album> AlbumList() {        
+    @RequestMapping(value = {"", "list"})    
+    public ResponseEntity<List<AlbumDTO>> AlbumList() {        
         try {
-            List<Album> albums = albumBO.findAllAlbums();   
-            return albums;         
-        } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(null, "asdasdf");
+            List<AlbumDTO> albums = new ArrayList<>(); 
+            
+            for(Album album : albumBO.findAllAlbums()){
+                albums.add(toDto.getDTO(album));
+            }            
+            return ResponseEntity.ok(albums);
+        } catch (Exception e) {            
             logger.error(e);
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);            
         }        
     }    
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public HttpStatus save(@Valid Album album, BindingResult bindingResult, @RequestParam(value = "file") MultipartFile imagefile) {
-
-        if (bindingResult.hasErrors()) {
-            return HttpStatus.NOT_ACCEPTABLE;
-        }
+    public HttpStatus save(@Valid @RequestBody Album album, @RequestParam(value = "file") MultipartFile imagefile) {
+        
 
         if (albumBO.existAlbum(album)) {
             return HttpStatus.CONFLICT;
@@ -85,7 +96,6 @@ public class AlbumController {
                 album.setImagefile(imagefile.getBytes());
             } catch (IOException io) {
                 logger.error(io);
-                javax.swing.JOptionPane.showMessageDialog(null, io);
             }
             album.setImagebase64("data:image/jpeg;base64," + encoded);
         }
@@ -135,16 +145,11 @@ public class AlbumController {
 
     @RequestMapping(value = "saveupdate", method = RequestMethod.PUT)
     public HttpStatus update(
-            @Valid Album cd,
-            BindingResult bindingResult) {
+            @Valid @RequestBody Album cd) {
 
-        if (bindingResult.hasErrors()) {
-            return HttpStatus.NOT_ACCEPTABLE;
-        }
         try {
             albumBO.update(cd);
         } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(null, e.getMessage());
             logger.error(e);
             return HttpStatus.BAD_REQUEST;
         }

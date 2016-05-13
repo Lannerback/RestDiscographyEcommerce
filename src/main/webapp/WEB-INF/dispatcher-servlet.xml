@@ -53,4 +53,8 @@
         <property name="path" value = "/home/adriano/SERVERFILES"/>
     </bean>
     
+    <bean id="daoBase" class="dao.impl.DaoBase">
+        
+    </bean>
+    
 </beans>

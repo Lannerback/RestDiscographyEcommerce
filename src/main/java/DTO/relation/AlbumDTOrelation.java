@@ -9,10 +9,7 @@ import DTO.AlbumDTO;
 import DTO.ArtistDTO;
 import java.util.Date;
 
-/**
- *
- * @author
- */
+//INUTILE PER ORA
 public class AlbumDTOrelation extends AlbumDTO {
     
     public AlbumDTOrelation(String imagepath, String imagebase64, byte[] imagefile, String title, String length, String label, String producer, Date year, String genre, ArtistDTO artist) {

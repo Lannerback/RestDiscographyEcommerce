@@ -5,11 +5,13 @@
  */
 package controller;
 
+import DTO.*;
 import Exception.NotFoundException;
 import business.AlbumBO;
 import business.ArtistBO;
 import business.RoleBO;
 import business.UserBO;
+import dao.impl.DaoBase;
 import domain.Album;
 import domain.Artist;
 import domain.User;
@@ -25,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Base64;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import util.FileManager;
 
@@ -58,6 +61,13 @@ public class MainController {
     @Autowired
     @Qualifier("fileManager")
     private FileManager fileManager;
+    
+    
+    @Autowired
+    @Qualifier("daoBase")
+    private DaoBase toDto;
+    
+    
     static final Logger logger = Logger.getLogger(MainController.class);
 
   
@@ -65,8 +75,8 @@ public class MainController {
     /* PER CRIPTAZIONE
     byte[] bytesOfMessage = yourString.getBytes("UTF-8");
 
-MessageDigest md = MessageDigest.getInstance("MD5");
-byte[] thedigest = md.digest(bytesOfMessage);
+    MessageDigest md = MessageDigest.getInstance("MD5");
+    byte[] thedigest = md.digest(bytesOfMessage);
     */
       
     
@@ -213,25 +223,25 @@ byte[] thedigest = md.digest(bytesOfMessage);
     }
 
     @RequestMapping(value = "showalbum/{id}")
-    public Album show_album_detail(@PathVariable Integer id) {        
+    public ResponseEntity<AlbumDTO> show_album_detail(@PathVariable Integer id) {        
         try{
             Album album = albumBO.findByUid(id);                       
-            return album;
+            return ResponseEntity.ok(toDto.getDTO(album));
         }catch(Exception e){            
             logger.error(e.getStackTrace());
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
     @RequestMapping(value = "showartist/{id}")
-    public Artist show_artist_detail(@PathVariable Long id) {
+    public ResponseEntity<ArtistDTO> show_artist_detail(@PathVariable Long id) {
         try{
             Artist artist;
             artist = artistBO.findByUid(id);
-            return artist;
+            return ResponseEntity.ok(toDto.getDTO(artist));
         }catch(Exception e){
             logger.error(e.getStackTrace());
-            return  null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         
     }

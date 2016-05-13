@@ -5,24 +5,30 @@
  */
 package controller.admin;
 
+import DTO.AlbumDTO;
+import DTO.ArtistDTO;
 import business.AlbumBO;
 import business.ArtistBO;
 import static controller.admin.AlbumController.logger;
+import dao.impl.DaoBase;
 import domain.Album;
 import domain.Artist;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import util.ClientResponse;
 import util.FileManager;
@@ -31,7 +37,7 @@ import util.FileManager;
  *
  * @author adriano
  */
-@Controller
+@RestController
 @RequestMapping(value = "admin/artist")
 public class ArtistController {
 
@@ -46,12 +52,26 @@ public class ArtistController {
     @Autowired
     @Qualifier("fileManager")
     private FileManager fileManager;
+    
+    @Autowired
+    @Qualifier("daoBase")
+    private DaoBase toDto;
 
-    static final Logger logger = Logger.getLogger(AlbumController.class);
+    static final Logger logger = Logger.getLogger(ArtistController.class);
 
     @RequestMapping(value = {"list", ""})
-    public List<Artist> ArtistList() {        
-        return artistBO.findAllArtists();
+    public ResponseEntity<List<ArtistDTO>> ArtistList() {        
+        try {
+            List<ArtistDTO> artists = new ArrayList<>(); 
+            
+            for(Artist artist : artistBO.findAllArtists()){
+                artists.add(toDto.getDTO(artist));
+            }
+            return ResponseEntity.ok(artists);
+        } catch (Exception e) {            
+            logger.error(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);            
+        }        
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
