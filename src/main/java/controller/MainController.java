@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import java.util.Base64;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -79,6 +80,22 @@ public class MainController {
     byte[] thedigest = md.digest(bytesOfMessage);
     */
       
+    @RequestMapping(value = {"albumlist"})    
+    public ResponseEntity<List<AlbumDTO>> AlbumList() {        
+        javax.swing.JOptionPane.showMessageDialog(null, "asdasd");
+        
+        try {
+            List<AlbumDTO> albums = new ArrayList<>(); 
+            
+            for(Album album : albumBO.findAllAlbums()){
+                albums.add(toDto.getDTO(album));
+            }                     
+            return ResponseEntity.ok(albums);
+        } catch (Exception e) {            
+            logger.error(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);            
+        }        
+    }    
     
     @RequestMapping(value = "tomcatdir")
     public String getTomcatDir(HttpServletRequest request){          

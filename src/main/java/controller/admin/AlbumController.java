@@ -19,6 +19,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import org.apache.log4j.Logger;
@@ -66,7 +67,11 @@ public class AlbumController {
 
 
     @RequestMapping(value = {"", "list"})    
-    public ResponseEntity<List<AlbumDTO>> AlbumList() {        
+    public ResponseEntity<List<AlbumDTO>> AlbumList(HttpServletResponse response) {        
+        javax.swing.JOptionPane.showMessageDialog(null, "asdasd");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Origin", "*");
         try {
             List<AlbumDTO> albums = new ArrayList<>(); 
             
