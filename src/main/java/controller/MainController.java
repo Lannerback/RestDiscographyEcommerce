@@ -81,9 +81,8 @@ public class MainController {
     */
       
     @RequestMapping(value = {"albumlist"})    
-    public ResponseEntity<List<AlbumDTO>> AlbumList() {        
-        javax.swing.JOptionPane.showMessageDialog(null, "asdasd");
-        
+    //@CrossOrigin(origins = "http://localhost")
+    public ResponseEntity<List<AlbumDTO>> AlbumList(){                
         try {
             List<AlbumDTO> albums = new ArrayList<>(); 
             
